@@ -2,6 +2,8 @@ package sn.niit.expense_tracker.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 public class SessionManager {
 
@@ -11,7 +13,7 @@ public class SessionManager {
     private static final String KEY_IS_LOGGED_IN = "is_logged_in";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_USER_ID = "user_id";
-    // Add more keys if you want to store additional user info, like email, access code, etc.
+    private static final String KEY_CURRENT_BALANCE = "current_balance";
 
     public SessionManager(Context context) {
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
@@ -51,9 +53,22 @@ public class SessionManager {
         return sharedPreferences.getInt(KEY_USER_ID, -1);
     }
 
+    // Set current balance
+    public void setCurrentBalance(double currentBalance) {
+        editor.putFloat(KEY_CURRENT_BALANCE, (float) currentBalance);
+        editor.apply();
+    }
+
+    // Get current balance
+    public double getCurrentBalance() {
+        return sharedPreferences.getFloat(KEY_CURRENT_BALANCE, 0.0f);
+    }
+
     // Clear session data (useful for logout)
     public void clearSession() {
         editor.clear();
         editor.apply();
     }
+
+
 }

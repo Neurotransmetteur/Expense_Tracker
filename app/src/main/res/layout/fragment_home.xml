@@ -3,41 +3,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment"
-    android:padding="16dp"
     android:background="#FFF"
-    >
-
+    android:padding="16dp"
+    tools:context=".HomeFragment">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
         android:background="#FFF"
-        android:elevation="4dp">
+        android:elevation="4dp"
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <!-- Balance Text -->
         <TextView
             android:id="@+id/balanceLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Solde disponible"
-            android:textSize="18sp"
-            android:textColor="#000000"
-            android:fontFamily="sans-serif-medium" />
-
-        <!-- Amount Text -->
-        <TextView
-            android:id="@+id/balanceAmount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="12 560.00 FCFA"
-            android:textSize="32sp"
-            android:textColor="#6C1E72"
             android:fontFamily="sans-serif-medium"
-            android:layout_marginTop="8dp" />
+            android:text="Solde disponible"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            >
+            <!-- Amount Text -->
+            <TextView
+                android:id="@+id/balanceAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="12 560.00 FCFA"
+                android:textColor="#6C1E72"
+                android:textSize="32sp" />
+            <View android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5" />
+
+
+            <ImageButton
+
+                android:id="@+id/btn_add_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:background="@android:color/transparent"
+                android:contentDescription="Select date"
+                android:src="@drawable/ic_baseline_add_24" />
+        </LinearLayout>
 
     </LinearLayout>
 

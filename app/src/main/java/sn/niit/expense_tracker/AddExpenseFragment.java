@@ -28,6 +28,8 @@ import java.text.DateFormat;
 import java.util.Calendar;
 
 import sn.niit.expense_tracker.domain.Transaction;
+import sn.niit.expense_tracker.utils.DbConnect;
+import sn.niit.expense_tracker.utils.SessionManager;
 
 public class AddExpenseFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
@@ -136,8 +138,34 @@ public class AddExpenseFragment extends Fragment implements DatePickerDialog.OnD
         // Create the transaction
         Transaction transaction = new Transaction(date, category, description, total, type);
 
-        // Handle the transaction (e.g., save to database, etc.)
-        // For now, just show a Toast message
+        // Access the database
+        DbConnect dbConnect = new DbConnect(getContext());
+        SessionManager sessionManager = new SessionManager(getContext());
+
+        // Get the current user ID from the session
+        int userId = sessionManager.getUserId();
+
+        // Save the transaction to the database
+        dbConnect.createTransaction(userId, transaction.getTotal(),transaction.getType().toString(),transaction.getCategory(),transaction.getDescription(),transaction.getDate());
+
+        // Update the user's balance in the database
+        double newBalance = dbConnect.getCurrentBalance(userId);
+
+        // Update the balance in the session manager
+        sessionManager.setCurrentBalance(newBalance);
+
+        // Show a success message
         Toast.makeText(getContext(), "Transaction saved: " + transaction.getCategory(), Toast.LENGTH_SHORT).show();
+
+        // Optionally, you can reset the input fields or navigate back
+        resetFields();
     }
+
+    private void resetFields() {
+        datePicker.setText("");
+        categorySpinner.setSelection(0);
+        descriptionEditText.setText("");
+        totalEditText.setText("");
+    }
+
 }

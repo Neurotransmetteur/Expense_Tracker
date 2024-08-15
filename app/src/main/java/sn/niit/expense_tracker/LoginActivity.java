@@ -59,7 +59,7 @@ public class LoginActivity extends Activity {
                     sessionManager.setLogin(true);
                     sessionManager.setUsername(user.getUsername());
                     sessionManager.setUserId(user.getId());
-
+                    sessionManager.setCurrentBalance(user.getCurrentBalance());
 
                     Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
 
