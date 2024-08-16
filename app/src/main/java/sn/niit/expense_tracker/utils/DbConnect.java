@@ -7,6 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import sn.niit.expense_tracker.domain.Transaction;
 import sn.niit.expense_tracker.domain.User;
 
 public class DbConnect extends SQLiteOpenHelper {
@@ -190,6 +194,33 @@ public class DbConnect extends SQLiteOpenHelper {
         db.close();  // Close the database connection
 
         return currentBalance;
+    }
+
+    public List<Transaction> getTransactions(int userId) {
+        List<Transaction> transactions = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Adjust the query to match your database schema
+        String query = "SELECT date, category, description, total, type FROM transactions WHERE user_id = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                String date = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TRANSACTION_DATE));
+                String category = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TRANSACTION_CATEGORY));
+                String description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TRANSACTION_DESCRIPTION));
+                double total = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_TRANSACTION_TOTAL));
+                String typeString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TRANSACTION_TYPE));
+                Transaction.TransactionType type = Transaction.TransactionType.valueOf(typeString.toUpperCase());
+
+                transactions.add(new Transaction(date, category, description, total, type));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return transactions;
     }
 
 }

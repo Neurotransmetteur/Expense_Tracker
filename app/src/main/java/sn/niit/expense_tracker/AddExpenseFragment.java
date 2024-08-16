@@ -154,6 +154,8 @@ public class AddExpenseFragment extends Fragment implements DatePickerDialog.OnD
         // Update the balance in the session manager
         sessionManager.setCurrentBalance(newBalance);
 
+//        HomeFragment.exposeLoadTransactions();
+
         // Show a success message
         Toast.makeText(getContext(), "Transaction saved: " + transaction.getCategory(), Toast.LENGTH_SHORT).show();
 

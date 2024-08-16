@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import sn.niit.expense_tracker.domain.Transaction;
@@ -28,6 +32,9 @@ public class HomeFragment extends Fragment {
     SessionManager sessionManager;
     ImageButton showBalanceBottomSheetBtn;
     DbConnect dbConnect;
+    private RecyclerView recyclerView;
+    private TransactionAdapter adapter;
+    private List<Transaction> transactionList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,11 +46,22 @@ public class HomeFragment extends Fragment {
         showBalanceBottomSheetBtn = view.findViewById(R.id.btn_add_balance);
         sessionManager = new SessionManager(requireContext()); // Initialize the session manager
         dbConnect = new DbConnect(requireContext()); // Initialize the DbConnect
+        recyclerView = view.findViewById(R.id.recyclerView);
+
+        // Set up RecyclerView
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        transactionList = new ArrayList<>();
+        adapter = new TransactionAdapter(transactionList);
+        recyclerView.setAdapter(adapter);
+
 
         if (sessionManager.isLoggedIn()) {
-            if (userBalanceText != null) {
-                userBalanceText.setText(sessionManager.getCurrentBalance() + " FCFA");
-            }
+
+            // Update the user balance display
+            updateBalance();
+
+            // Retrieve and display transactions
+            loadTransactions();
 
             showBalanceBottomSheetBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -101,4 +119,21 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         return view;
     }
+
+    private void updateBalance() {
+        if (userBalanceText != null) {
+            userBalanceText.setText(sessionManager.getCurrentBalance() + " FCFA");
+        }
+    }
+
+    private void loadTransactions() {
+        int userId = sessionManager.getUserId();  // Assume this method exists in SessionManager
+        transactionList.clear();
+        transactionList.addAll(dbConnect.getTransactions(userId));
+        adapter.notifyDataSetChanged();
+    }
+
+//    public static void exposeLoadTransactions(){
+//        loadTransactions();
+//    }
 }
